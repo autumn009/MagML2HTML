@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32127.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagML2HTML", "MagML2HTML\MagML2HTML.csproj", "{DC3069AA-C2A5-4F20-A76B-B2827B35AA67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagMLParser", "MagMLParser\MagMLParser.csproj", "{9AC61D42-B193-4F5D-A36C-D204F1616DBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC3069AA-C2A5-4F20-A76B-B2827B35AA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3069AA-C2A5-4F20-A76B-B2827B35AA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3069AA-C2A5-4F20-A76B-B2827B35AA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3069AA-C2A5-4F20-A76B-B2827B35AA67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC61D42-B193-4F5D-A36C-D204F1616DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC61D42-B193-4F5D-A36C-D204F1616DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC61D42-B193-4F5D-A36C-D204F1616DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC61D42-B193-4F5D-A36C-D204F1616DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C164A92-32E1-4B30-BEB5-34A45BDB3707}
+	EndGlobalSection
+EndGlobal
