@@ -1962,7 +1962,7 @@ allInitializers.push(t);
 
 				SectionDef targetDef = SectionDefManager.GetSectionDef(targetKeyword);
 				sb.Append("<it:item code='");
-				sb.Append(HttpUtility.HtmlEncode(targetDef.ShortKeyword.Trim()));
+                System.Text.StringBuilder stringBuilder = sb.Append(HttpUtility.HtmlEncode(targetDef.ShortKeyword.Trim()));
 				sb.Append("' class='normal'>");
 
 				sb.Append("<it:title>");
@@ -2009,34 +2009,10 @@ allInitializers.push(t);
 				return;
 			}
 
-			currentInfo.ParentNhNode.WriteRawString("<it:referList>");
-
-			DateTime today = DateTime.Today;
-			// ツリーを歩く
-			foreach (ItemID id in ContentFileAccessLayer.EnumetateItemIDsIncludingSubKeywords(ShortKeywordFinder.GetFullKeyword(shortName)).Select(c => c.ID))
+			using (NhP p = ((NhBlock)currentInfo.ParentNhNode).CreateP())
 			{
-				if (!id.IsNormalItemID()) continue;
-				const string template = @"<it:item>
-<it:contentID>{0}</it:contentID> 
-<it:title>{1}</it:title> 
-<it:date>{2}</it:date> 
-{3}
-<it:summary>{4}</it:summary> 
-<it:totalAccessCount>{5}</it:totalAccessCount> 
-<it:recentlyAccessCount>{6}</it:recentlyAccessCount>
-</it:item>";
-				Item item = ContentFileAccessLayer.GetItem(id);
-				currentInfo.ParentNhNode.WriteRawString(string.Format(template,
-					item.ItemID.ID,
-					HttpUtility.HtmlEncode(item.SubjectFull),
-					item.Date.ToString("yyyy年MM月dd日"),
-					writeInterimKeyword(item.Keyword),
-					HttpUtility.HtmlEncode(item.GetDigestText()),
-					ContentAccessRanking.GetTotalAccess(id),
-					ContentAccessRanking.GetAccessRanking(item.Keyword, today).GetCount(id)));
+				generateErrorMessage(p, "ctreeはサポートされていません。");
 			}
-
-			currentInfo.ParentNhNode.WriteRawString("</it:referList>");
 		}
 
 		private void generateXhtmlFragment(MagNode magNode)
@@ -2361,7 +2337,7 @@ allInitializers.push(t);
 
 	public class MagML
 	{
-		public const string RendererName = "MagML Renderer 0.01 (MagSite1 " + Version.Number + ")";
+		public const string RendererName = "MagML Renderer 0.01 (MagMLParser.DLL)";
 		public string RenderedBody;
 		public bool EncountedError;
 		public ArrayList Categories;
