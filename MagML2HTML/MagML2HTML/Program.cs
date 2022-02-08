@@ -1,5 +1,6 @@
 ﻿using MagMLParser;
 using System.Diagnostics;
+using System.Web;
 using System.Xml;
 
 if(Environment.GetCommandLineArgs().Length < 2)
@@ -17,6 +18,11 @@ using (var dstFile = File.CreateText(dstFileName))
     {
         XmlDocument doc = new XmlDocument();
         doc.Load(File.OpenRead(filename));
+        string subject = "NO NAME";
+        var subjectNode = doc.GetElementsByTagName("subject", XmlNamespaces.Item);
+        if (subjectNode.Count > 0)
+            subject = subjectNode[0].InnerText;
+
         var srcNode = doc.GetElementsByTagName("body", XmlNamespaces.Item);
         if (srcNode.Count > 0)
         {
@@ -25,6 +31,7 @@ using (var dstFile = File.CreateText(dstFileName))
             var processor = new MagML();
             processor.Compile(src, null, false);
             //Console.WriteLine(processor.RenderedBody);
+            dstFile.WriteLine($"<h1>{HttpUtility.HtmlEncode(subject)}</h1>");
             dstFile.WriteLine(processor.RenderedBody);
         }
     }
