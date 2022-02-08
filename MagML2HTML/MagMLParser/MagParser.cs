@@ -1164,51 +1164,6 @@ namespace MagMLParser
 			}
 		}
 
-		private void writeRawCrLf()
-		{
-			currentInfo.ParentNhNode.WriteRawString("\r\n");
-		}
-
-		private void writeRawStartElementWithoutCrLf(string elementName)
-		{
-			currentInfo.ParentNhNode.WriteRawString("<");
-			currentInfo.ParentNhNode.WriteRawString(elementName);
-			currentInfo.ParentNhNode.WriteRawString(">");
-		}
-
-		private void writeRawStartElement(string elementName)
-		{
-			writeRawStartElementWithoutCrLf(elementName);
-			writeRawCrLf();
-		}
-
-		private void writeRawEndElement(string elementName)
-		{
-			currentInfo.ParentNhNode.WriteRawString("</");
-			currentInfo.ParentNhNode.WriteRawString(elementName);
-			currentInfo.ParentNhNode.WriteRawString(">\r\n");
-		}
-
-		private void writeRawElementString(string elementName, string val)
-		{
-			writeRawStartElementWithoutCrLf(elementName);
-			currentInfo.ParentNhNode.WriteRawString(XmlUtility.EscapeStringByPredefinedEntities(val));
-			writeRawEndElement(elementName);
-		}
-
-		private void writeRawSizeElement(int width, int height, bool suggested)
-		{
-			currentInfo.ParentNhNode.WriteRawString("<it:size width=\"");
-			currentInfo.ParentNhNode.WriteRawString(width.ToString());
-			currentInfo.ParentNhNode.WriteRawString("\" height=\"");
-			currentInfo.ParentNhNode.WriteRawString(height.ToString());
-			if (suggested)
-			{
-				currentInfo.ParentNhNode.WriteRawString("\" suggestedSize=\"true");
-			}
-			currentInfo.ParentNhNode.WriteRawString("\" />\r\n");
-		}
-
 		private void generateTableRaw(NhTable table, MagNode node, bool firstLine)
 		{
 			using (NhTr tr = table.CreateTr())
@@ -1386,11 +1341,6 @@ namespace MagMLParser
 			}
 		}
 
-		private string escapeForJS(string s)
-		{
-			return XmlUtility.EscapeStringByPredefinedEntities(s).Replace("\"", "\u0022");
-		}
-
 		private enum GoogleMapsType
 		{
 			Normal, Point, PolyLine
@@ -1483,50 +1433,6 @@ allInitializers.push(t);
 ");
 
 			nhbase.WriteRawString("</script>");
-		}
-
-		// ModulaFModule.csのwriteInterimKeywordの文字列生成版
-		private static string writeInterimKeyword(FullKeyword keyword)
-		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			sb.Append("<it:keyword>");
-
-			for (int depth = 0; depth < keyword.Keywords.Length; depth++)
-			{
-				string[] targetNames = new string[depth + 1];
-				for (int i = 0; i < depth + 1; i++)
-				{
-					targetNames[i] = keyword.Keywords[i];
-				}
-				FullKeyword targetKeyword = new FullKeyword(targetNames);
-
-				SectionDef targetDef = SectionDefManager.GetSectionDef(targetKeyword);
-				sb.Append("<it:item code='");
-                System.Text.StringBuilder stringBuilder = sb.Append(HttpUtility.HtmlEncode(targetDef.ShortKeyword.Trim()));
-				sb.Append("' class='normal'>");
-
-				sb.Append("<it:title>");
-				sb.Append(HttpUtility.HtmlEncode(keyword.Keywords[depth]));
-				sb.Append("</it:title>");
-
-				//if( !itemID.IsNoItem() )
-				//{
-				//	ItemID prevKWItemID = ItemListManager.ContentList.GetPrevItemIDByKeyword(itemID,targetKeyword);
-				//	writeNextPrevItem( writer, prevKWItemID, "prev" );
-
-				//	ItemID nextKWItemID = ItemListManager.ContentList.GetNextItemIDByKeyword(itemID,targetKeyword);
-				//	writeNextPrevItem( writer, nextKWItemID, "next" );
-				//}
-
-				// Todo: キーワードのサマリ情報を追加 
-				// (構造を持ちWriteElementStringでは済まないかもしれない)
-				// writer.WriteElementString("summary",XmlNamespaces.Interim,"サマリ");
-
-				sb.Append("</it:item>");
-			}
-
-			sb.Append("</it:keyword>");
-			return sb.ToString();
 		}
 
 		private void generateContentTree(MagNode magNode)
@@ -1857,10 +1763,6 @@ allInitializers.push(t);
 		}
 		public MagXHTMLGenerator(MagNode magTreeRoot, object attahedFileInfomations)
 			: this(magTreeRoot, attahedFileInfomations, false, false)
-		{
-		}
-		public MagXHTMLGenerator(MagNode magTreeRoot)
-			: this(magTreeRoot, null)
 		{
 		}
 	}
