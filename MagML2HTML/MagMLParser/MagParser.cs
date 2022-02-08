@@ -709,17 +709,8 @@ namespace MagMLParser
 		{
 			if (!checkFirstChildText(nhTarget, magNode)) return;
 
-			string idString = magNode.Children[0].Value;
-			ItemID itemID = new ItemID(idString);
-			if (ContentFileAccessLayer.IsExist(itemID))
-			{
-				nhTarget.WriteAText("Content.modf?id=" + idString, ContentFileAccessLayer.GetItem(itemID).SubjectFull);
-			}
-			else
-			{
-				generateErrorMessage(nhTarget,
-					magNode.Value + "マークアップの内容に指定された" + idString + "に対応するコンテンツは見つかりません。");
-			}
+			generateErrorMessage(nhTarget,
+				"refはサポートされていません。");
 		}
 
 		private void generateSuperQMarkup(NhInline nhTarget, MagNode magNode)

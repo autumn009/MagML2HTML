@@ -138,7 +138,6 @@ namespace MagMLParser
 
 		private const string DateTimeFormat = "yyyyMMddHHmmss";
 
-		private string lastLoadedFileName = "";
 		private FullKeyword lastKeyword = FullKeyword.NoKeyword;
 		public readonly ItemID ItemID;
 		public readonly DateTime Date;
@@ -155,18 +154,6 @@ namespace MagMLParser
 		public ChileCollection ChileEmbeddedIDs;
 		public ChileCollection ChileRepresentISs;
 
-		public ChileCollection AllChileIDs
-		{
-			get
-			{
-				var t = new ChileCollection(this.confirmNotNoDataItem);
-				foreach (string s in ChileRepresentISs) t.Add(s);
-				foreach (string s in ChileEmbeddedIDs) t.Add(s);
-				foreach (string s in ChileDirectIDs) t.Add(s);
-				return t;
-			}
-		}
-
 		private string rendererName = "";
 		public string RendererName
 		{
@@ -175,47 +162,6 @@ namespace MagMLParser
 			{
 				confirmNotNoDataItem();
 				rendererName = value;
-			}
-		}
-
-		private DateTime renderedDate = DateTime.MinValue;
-		public DateTime RenderedDate
-		{
-			get { return renderedDate; }
-			set
-			{
-				confirmNotNoDataItem();
-				renderedDate = value;
-			}
-		}
-
-		private string renderedBody = "";
-		public string RenderedBody
-		{
-			get { return renderedBody; }
-			set
-			{
-				confirmNotNoDataItem();
-				renderedBody = value;
-			}
-		}
-
-		private string subject = "";
-		public string Subject
-		{
-			get { return subject; }
-			set
-			{
-				confirmNotNoDataItem();
-				subject = value;
-			}
-		}
-
-		public string SubjectFull
-		{
-			get
-			{
-				return WriteLib.BuildSubject(subject, AdditionalTitle);
 			}
 		}
 
@@ -319,13 +265,10 @@ namespace MagMLParser
 				lock (duplicateFrom)
 				{
 					this.keyword = duplicateFrom.keyword;
-					this.subject = duplicateFrom.subject;
 					this.AdditionalTitle = duplicateFrom.AdditionalTitle;
 					this.bodyType = duplicateFrom.bodyType;
 					this.body = duplicateFrom.body;
 					this.rendererName = duplicateFrom.rendererName;
-					this.renderedDate = duplicateFrom.renderedDate;
-					this.renderedBody = duplicateFrom.renderedBody;
 
 					this.ChileDirectIDs.Clear();
 					for (int i = 0; i < duplicateFrom.ChileDirectIDs.Count; i++)
@@ -382,7 +325,6 @@ namespace MagMLParser
 			DummyItem.keyword = FullKeyword.NoKeyword;
 			DummyItem.body = "このメッセージは発見できません。削除された可能性があります。";
 			DummyItem.bodyType = EBodyType.PlaneText;
-			DummyItem.subject = "削除された可能性のあるメッセージ";
 		}
 	}
 
