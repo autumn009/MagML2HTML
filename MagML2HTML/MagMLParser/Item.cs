@@ -154,50 +154,6 @@ namespace MagMLParser
 		public ChileCollection ChileEmbeddedIDs;
 		public ChileCollection ChileRepresentISs;
 
-		private string rendererName = "";
-		public string RendererName
-		{
-			get { return rendererName; }
-			set
-			{
-				confirmNotNoDataItem();
-				rendererName = value;
-			}
-		}
-
-		private FullKeyword keyword = FullKeyword.NoKeyword;
-		public FullKeyword Keyword
-		{
-			get { return keyword; }
-			set
-			{
-				confirmNotNoDataItem();
-				keyword = value;
-			}
-		}
-
-		private string body = "";
-		public string Body
-		{
-			get { return body; }
-			set
-			{
-				confirmNotNoDataItem();
-				body = value;
-			}
-		}
-
-		private EBodyType bodyType = EBodyType.XhtmlByText;
-		public EBodyType BodyType
-		{
-			get { return bodyType; }
-			set
-			{
-				confirmNotNoDataItem();
-				bodyType = value;
-			}
-		}
-
 		private AttachedFile[] attachedFiles = { };
 		public AttachedFile[] AttachedFiles
 		{
@@ -264,11 +220,7 @@ namespace MagMLParser
 			{
 				lock (duplicateFrom)
 				{
-					this.keyword = duplicateFrom.keyword;
 					this.AdditionalTitle = duplicateFrom.AdditionalTitle;
-					this.bodyType = duplicateFrom.bodyType;
-					this.body = duplicateFrom.body;
-					this.rendererName = duplicateFrom.rendererName;
 
 					this.ChileDirectIDs.Clear();
 					for (int i = 0; i < duplicateFrom.ChileDirectIDs.Count; i++)
@@ -322,9 +274,6 @@ namespace MagMLParser
 		static Item()
 		{
 			DummyItem = new Item(ItemID.NoItem, DateTime.MinValue);
-			DummyItem.keyword = FullKeyword.NoKeyword;
-			DummyItem.body = "このメッセージは発見できません。削除された可能性があります。";
-			DummyItem.bodyType = EBodyType.PlaneText;
 		}
 	}
 
