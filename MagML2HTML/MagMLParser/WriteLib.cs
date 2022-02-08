@@ -23,37 +23,6 @@ namespace MagMLParser
 			if (b == '~') return true;
 			return false;
 		}
-		public static string CreateAttachedFileURI(ItemID itemID, string? filename, int width)
-		{
-			throw new NotImplementedException("CreateAttachedFileURI");
-		}
-		public static int SuggestedPictureIndex(int width, int[] resizeWidths)
-		{
-			int index = 0;
-			while (true)
-			{
-				if (index >= resizeWidths.Length) break;
-				if (resizeWidths[index] >= width) break;
-				if (index == 2) break;
-				index++;
-			}
-			return index;
-		}
-		public static void CreatePictureMenuItem(NhInline parent, ItemID itemID,
-			Item.AttachedFile attachedFile)
-		{
-			throw new NotImplementedException("CreateAttachedFileURI");
-		}
-		public static void CreateNormalMenuItem(NhInline parent, ItemID itemID,
-	Item.AttachedFile attachedFile)
-		{
-			throw new NotImplementedException("CreateNormalMenuItem");
-		}
-
-        internal static string BuildSubject(string subject, string additionalTitle)
-        {
-            throw new NotImplementedException();
-        }
     }
 	public class UtilXmlWriter
 	{
