@@ -30,19 +30,6 @@ namespace MagMLParser
 		{
 			writer.WriteWhitespace("\r\n");
 		}
-		public static void WriteEndElement(XmlWriter writer)
-		{
-			writer.WriteEndElement();
-			WriteNewline(writer);
-		}
-		//writer.WriteElementString(elementName,XmlNamespaces.Item,val);
-		//XmlNamespaces.TrackBack
-
-		public static void WriteElementString(XmlWriter writer, string elementName, string namespaceURI, string val)
-		{
-			writer.WriteElementString(elementName, namespaceURI, val);
-			UtilXmlWriter.WriteNewline(writer);
-		}
 	}
 
 }

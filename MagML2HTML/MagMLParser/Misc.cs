@@ -48,16 +48,4 @@ namespace MagMLParser
             return x.ID != y.ID;
         }
     }
-    public class Size
-    {
-        public Size(int pixelWidth, int pixelHeight)
-        {
-            Width = pixelWidth;
-            Height = pixelHeight;
-        }
-
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool IsEmpty { get; internal set; }
-    }
 }
