@@ -250,19 +250,6 @@ namespace MagMLParser
     {
         public readonly ItemID ID;
         public readonly FullKeyword Keyword;
-        public Item Item
-        {
-            get
-            {
-                string path = FileLayout.GetContentFileName(ID, Keyword);
-                if (!File.Exists(path)) return Item.DummyItem;
-                return new Item(ID, Keyword);
-            }
-        }
-        public ContentEntry(ItemID id, FullKeyword kw)
-        {
-            ID = id; Keyword = kw;
-        }
     }
     public class ContentFileAccessLayer
     {
@@ -394,10 +381,6 @@ namespace MagMLParser
                 System.Threading.Thread.Sleep(100);
             }
         }
-    }
-    public class FileLayout
-    {
-        public static GetItemFileName GetContentFileName => throw new NotImplementedException();
     }
 
     public class ContentAccessRanking
