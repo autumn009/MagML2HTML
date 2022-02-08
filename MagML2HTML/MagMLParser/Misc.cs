@@ -258,11 +258,6 @@ namespace MagMLParser
             throw new NotImplementedException();
         }
 
-        internal static Item GetItem(ItemID itemID)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static IEnumerable<ContentEntry> EnumetateItemIDsIncludingSubKeywords(FullKeyword fullKeyword)
         {
             throw new NotImplementedException();
