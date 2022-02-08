@@ -2058,10 +2058,14 @@ allInitializers.push(t);
 									}
 									else
 									{
+#if USE_spaceBetweenPara
 										using (NhDiv div = ((NhBlock)currentInfo.ParentNhNode).CreateDiv())
 										{
 											div.WriteClassAttr("spaceBetweenPara");
 										}
+#else
+										((NhBlock)currentInfo.ParentNhNode).WriteRawString("<br />\r\n");
+#endif
 									}
 								}
 								else
