@@ -1449,12 +1449,6 @@ allInitializers.push(t);
 				return;
 			}
 
-			if (shortName.Length > 0 && !ShortKeywordFinder.IsShortKeyword(shortName))
-			{
-				generateErrorMessageForBlock(currentInfo.ParentNhNode, shortName + "はキーワードの短い名前ではありません。");
-				return;
-			}
-
 			using (NhP p = ((NhBlock)currentInfo.ParentNhNode).CreateP())
 			{
 				generateErrorMessage(p, "ctreeはサポートされていません。");
