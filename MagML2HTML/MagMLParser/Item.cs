@@ -36,16 +36,6 @@ namespace MagMLParser
 			}
 		}
 
-		private ArrayList alreadySentTrackBackUrls = new ArrayList();
-
-		private ArrayList waitingTrackBackUrls = new ArrayList();
-
-		private ArrayList pendingTrackBackUrls = new ArrayList();
-
-		private ArrayList processingTrackBackUrls = new ArrayList();
-
-		private ArrayList categoryNames = new ArrayList();
-
 		private string additionalTitle = "";
 
 		public string AdditionalTitle
@@ -67,12 +57,6 @@ namespace MagMLParser
 				lock (duplicateFrom)
 				{
 					this.AdditionalTitle = duplicateFrom.AdditionalTitle;
-
-					this.waitingTrackBackUrls = (ArrayList)duplicateFrom.waitingTrackBackUrls.Clone();
-					this.processingTrackBackUrls = (ArrayList)duplicateFrom.processingTrackBackUrls.Clone();
-					this.pendingTrackBackUrls = (ArrayList)duplicateFrom.pendingTrackBackUrls.Clone();
-					this.alreadySentTrackBackUrls = (ArrayList)duplicateFrom.alreadySentTrackBackUrls.Clone();
-					this.categoryNames = (ArrayList)duplicateFrom.categoryNames.Clone();
 				}
 			}
 		}
