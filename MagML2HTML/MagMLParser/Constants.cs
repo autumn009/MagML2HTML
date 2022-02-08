@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace MagMLParser
 {
-    internal class Constants
-    {
-    }
 	public class XmlNamespaces
 	{
 		public const string Xhtml = "http://www.w3.org/1999/xhtml";
