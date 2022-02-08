@@ -20,17 +20,6 @@ namespace MagMLParser
 		XhtmlFragment
 	}
 
-	public class MagAttachedFileInformations
-	{
-		public readonly ItemID ItemID;
-		public readonly Item.AttachedFile[] AttachedFiles;
-		public MagAttachedFileInformations(ItemID itemID, Item.AttachedFile[] attachedFiles)
-		{
-			ItemID = itemID;
-			AttachedFiles = attachedFiles;
-		}
-	}
-
 	public class MagToken
 	{
 		public readonly EMagTokenType Type;
@@ -773,56 +762,7 @@ namespace MagMLParser
 				return;
 			}
 
-			Item.AttachedFile targetAttachedFile = null;
-			foreach (Item.AttachedFile attachedFile in attachedFileInfomations.AttachedFiles)
-			{
-				if (attachedFile.Number == number)
-				{
-					targetAttachedFile = attachedFile;
-				}
-			}
-			if (targetAttachedFile == null)
-			{
-				generateErrorMessage(nhTarget, "画像番号、" + src.Substring(0, p) + "は、見つかりません。");
-				return;
-			}
-			if (!FileExtentionManager.IsBitmap(targetAttachedFile.FileName))
-			{
-				generateErrorMessage(nhTarget, "画像番号、" + number.ToString() + "はサポートされている画像形式ではないため、imgマークアップでは使用できません。");
-			}
-
-			int p2 = skipUntilNotSpaceCharacter(src, p);
-			int p3 = skipUntilSpaceCharacter(src, p2);
-
-			int size = 0;
-			if (p2 != p3)
-			{
-				try
-				{
-					size = int.Parse(src.Substring(p2, p3 - p2));
-				}
-				catch (FormatException)
-				{
-					generateErrorMessage(nhTarget, src.Substring(p2, p3 - p2) + "は、画像幅サイズとして解釈できません。半角数字で記述する必要があります。");
-					return;
-				}
-				if (size <= 0)
-				{
-					generateErrorMessage(nhTarget, src.Substring(p2, p3 - p2) + "は、画像幅サイズとして解釈できません。半角数字で記述する必要があります。");
-					return;
-				}
-			}
-
-			string remain = src.Substring(p3);
-			if (remain.Length > 0)
-			{
-				generateErrorMessage(nhTarget, remain + "は、imgマークアップの内容として解釈できません。");
-				return;
-			}
-
-			targetAttachedFile.DisabledInMenu = true;
-			nhTarget.WriteImg(WriteLib.CreateAttachedFileURI(attachedFileInfomations.ItemID,
-				targetAttachedFile.FileName, size), targetAttachedFile.Name);
+			generateErrorMessage(nhTarget, "imgマークアップはサポートされていません。");
 		}
 
 		private void generateInlineMarkups(NhInline nhTarget, MagNode magNode)
@@ -1274,131 +1214,6 @@ namespace MagMLParser
 			currentInfo.ParentNhNode.WriteRawString("\" />\r\n");
 		}
 
-		private void generateAttacheMenuForModulaF(int number, Item.AttachedFile targetAttachedFile, bool isBitmap)
-		{
-			targetAttachedFile.DisabledInMenu = true;
-			string elementName = isBitmap ? "it:pictureFileMenu" : "it:attachedFileMenu";
-
-			currentInfo.ParentNhNode.WriteRawString("<");
-			currentInfo.ParentNhNode.WriteRawString(elementName);
-			currentInfo.ParentNhNode.WriteRawString(" fileNumber=\"");
-			currentInfo.ParentNhNode.WriteRawString(number.ToString());
-			currentInfo.ParentNhNode.WriteRawString("\">\r\n");
-			if (!isBitmap)
-			{
-				writeRawElementString("it:uri", WriteLib.CreateAttachedFileURI(attachedFileInfomations.ItemID,
-					targetAttachedFile.FileName, 0));
-			}
-			writeRawElementString("it:description", targetAttachedFile.Name);
-			if (isBitmap)
-			{
-				int[] resizeWidths = ResizeManager.GetResizeWidths();
-
-				writeRawStartElementWithoutCrLf("it:thumbNailUri");
-				int thumbNailWidth = targetAttachedFile.PixelSize.Width > resizeWidths[0] ?
-					resizeWidths[0] : 0;
-				string thumbNailUri = WriteLib.CreateAttachedFileURI(attachedFileInfomations.ItemID,
-					targetAttachedFile.FileName, thumbNailWidth);
-				currentInfo.ParentNhNode.WriteRawString(XmlUtility.EscapeStringByPredefinedEntities(thumbNailUri));
-				writeRawEndElement("it:thumbNailUri");
-
-				writeRawStartElement("it:sizes");
-
-				int suggestedIndex = WriteLib.SuggestedPictureIndex(targetAttachedFile.PixelSize.Width, resizeWidths);
-				int index = 0;
-				while (true)
-				{
-					if (index >= resizeWidths.Length) break;
-					if (resizeWidths[index] >= targetAttachedFile.PixelSize.Width) break;
-					writeRawSizeElement(resizeWidths[index], targetAttachedFile.PixelSize.Height * resizeWidths[index] / targetAttachedFile.PixelSize.Width, suggestedIndex == index);
-					index++;
-				}
-				writeRawSizeElement(targetAttachedFile.PixelSize.Width, targetAttachedFile.PixelSize.Height, suggestedIndex == index);
-				writeRawEndElement("it:sizes");
-			}
-			writeRawEndElement(elementName);
-		}
-
-		private void generateAttacheMenu(MagNode targetNode,
-			MagAttachedFileInformations attahedFileInfomations,
-			bool isBitmap,
-			string targetName, string otherName,
-			string targetMarkup, string otherMarkup,
-			string attributeName)
-		{
-			string argument = getInnerText(targetNode).Trim();
-			foreach (char ch in argument)
-			{
-				if (!SimpleCharTest.IsDigit(ch))
-				{
-					errorMessages.Add(targetName + "の番号を示す" + argument + "は半角数字でなければなりません。");
-					return;
-				}
-			}
-			int number = int.Parse(argument);
-			Item.AttachedFile targetAttachedFile = null;
-			foreach (Item.AttachedFile attachedFile in attahedFileInfomations.AttachedFiles)
-			{
-				if (attachedFile.Number == number)
-				{
-					targetAttachedFile = attachedFile;
-					break;
-				}
-			}
-			if (targetAttachedFile == null)
-			{
-				errorMessages.Add(argument + "の番号を持つ" + targetName + "が見つかりません。");
-				return;
-			}
-
-			if (isBitmap != FileExtentionManager.IsBitmap(targetAttachedFile.FileName))
-			{
-				errorMessages.Add(argument + "の番号を持つ添付ファイルは、" + targetName + "としては扱えません。"
-					+ otherName + "として扱う場合は" + targetMarkup + "マークアップではなく、"
-					+ otherMarkup + "マークアップを使用して下さい。");
-				return;
-			}
-
-			if (modulafMode)
-			{
-				generateAttacheMenuForModulaF(number, targetAttachedFile, isBitmap);
-				return;
-			}
-
-			NhInline inline;
-			if (currentInfo.ParentNhNode is NhUl)
-			{
-				inline = ((NhUl)currentInfo.ParentNhNode).CreateLiInline();
-			}
-			else if (currentInfo.ParentNhNode is NhOl)
-			{
-				inline = ((NhOl)currentInfo.ParentNhNode).CreateLiInline();
-			}
-			else
-			{
-				inline = ((NhBlock)currentInfo.ParentNhNode).CreateP();
-				inline.WriteClassAttr(attributeName);
-			}
-			try
-			{
-				targetAttachedFile.DisabledInMenu = true;
-				if (isBitmap)
-				{
-					WriteLib.CreatePictureMenuItem(inline, attahedFileInfomations.ItemID,
-						targetAttachedFile);
-				}
-				else
-				{
-					WriteLib.CreateNormalMenuItem(inline, attahedFileInfomations.ItemID,
-						targetAttachedFile);
-				}
-			}
-			finally
-			{
-				inline.Dispose();
-			}
-		}
-
 		private void generateTableRaw(NhTable table, MagNode node, bool firstLine)
 		{
 			using (NhTr tr = table.CreateTr())
@@ -1517,36 +1332,6 @@ namespace MagMLParser
 				+ "</div>";
 
 			nhbase.WriteRawString(string.Format(formatString, youTubeID, width, height));
-		}
-
-		private void generateFileHide(MagNode targetNode, MagAttachedFileInformations attahedFileInfomations)
-		{
-			string argument = getInnerText(targetNode).Trim();
-			foreach (char ch in argument)
-			{
-				if (!SimpleCharTest.IsDigit(ch))
-				{
-					errorMessages.Add("ファイル番号を示す" + argument + "は半角数字でなければなりません。");
-					return;
-				}
-			}
-			int number = int.Parse(argument);
-			Item.AttachedFile targetAttachedFile = null;
-			foreach (Item.AttachedFile attachedFile in attahedFileInfomations.AttachedFiles)
-			{
-				if (attachedFile.Number == number)
-				{
-					targetAttachedFile = attachedFile;
-					break;
-				}
-			}
-			if (targetAttachedFile == null)
-			{
-				errorMessages.Add(argument + "の番号を持つ添付ファイルが見つかりません。");
-				return;
-			}
-
-			targetAttachedFile.DisabledInMenu = true;
 		}
 
 		private void generateAsinReference(MagNode targetNode)
@@ -2121,22 +1906,10 @@ allInitializers.push(t);
 			return false;
 		}
 
-		private void clearAttachedFlagssOfDisabledInMenu(MagAttachedFileInformations attahedFileInfomations)
-		{
-			foreach (Item.AttachedFile attachedFile in attahedFileInfomations.AttachedFiles)
-			{
-				attachedFile.DisabledInMenu = false;
-			}
-		}
-
-		private readonly MagAttachedFileInformations attachedFileInfomations;
 		private readonly bool modulafMode;
 		private readonly bool preview;
-		public MagXHTMLGenerator(MagNode magTreeRoot, MagAttachedFileInformations attahedFileInfomations, bool modulafMode, bool preview)
+		public MagXHTMLGenerator(MagNode magTreeRoot, object dummy, bool modulafMode, bool preview)
 		{
-			clearAttachedFlagssOfDisabledInMenu(attahedFileInfomations);
-
-			this.attachedFileInfomations = attahedFileInfomations;
 			this.modulafMode = modulafMode;
 			this.preview = preview;
 			StringWriter writer = new StringWriter();
@@ -2192,12 +1965,10 @@ allInitializers.push(t);
 									generatePre(node.Children[0]);
 									break;
 								case "pm":
-									generateAttacheMenu(node.Children[0], attahedFileInfomations,
-										true, "画像", "添付ファイル", "pm", "fl", "attachMenu");
+									generateErrorMessageForBlock(currentInfo.ParentNhNode, "pmマークアップはサポートされていません。");
 									break;
 								case "fl":
-									generateAttacheMenu(node.Children[0], attahedFileInfomations,
-										false, "添付ファイル", "画像", "fl", "pm", "attachMenuForNormal");
+									generateErrorMessageForBlock(currentInfo.ParentNhNode, "flマークアップはサポートされていません。");
 									break;
 								case "cat":
 									string argument = getInnerText(node.Children[0]);
@@ -2226,7 +1997,7 @@ allInitializers.push(t);
 									generateLargeText(node.Children[0]);
 									break;
 								case "fhide":
-									generateFileHide(node.Children[0], attahedFileInfomations);
+									generateErrorMessageForBlock(currentInfo.ParentNhNode, "fhideマークアップはサポートされていません。");
 									break;
 								case "asin":
 									generateAsinReference(node.Children[0]);
@@ -2325,12 +2096,12 @@ allInitializers.push(t);
 			}
 			XhtmlFragmentString = writer.ToString();
 		}
-		public MagXHTMLGenerator(MagNode magTreeRoot, MagAttachedFileInformations attahedFileInfomations)
+		public MagXHTMLGenerator(MagNode magTreeRoot, object attahedFileInfomations)
 			: this(magTreeRoot, attahedFileInfomations, false, false)
 		{
 		}
 		public MagXHTMLGenerator(MagNode magTreeRoot)
-			: this(magTreeRoot, new MagAttachedFileInformations(ItemID.NoItem, new Item.AttachedFile[0]))
+			: this(magTreeRoot, null)
 		{
 		}
 	}
@@ -2343,22 +2114,22 @@ allInitializers.push(t);
 		public ArrayList Categories;
 		public List<string> EmbeddedAsins;
 		public List<string> RepresentAsins;
-		public void Compile(string src, MagAttachedFileInformations attahedFileInfomations,
+		public void Compile(string src, object dummy,
 			bool modulafMode, bool preview)
 		{
 			MagTokenizer tokenizer = new MagTokenizer(src);
 			MagParser parser = new MagParser(tokenizer);
-			MagXHTMLGenerator generator = new MagXHTMLGenerator(parser.MagTree, attahedFileInfomations, modulafMode, preview);
+			MagXHTMLGenerator generator = new MagXHTMLGenerator(parser.MagTree, dummy, modulafMode, preview);
 			RenderedBody = generator.XhtmlFragmentString;
 			EncountedError = generator.EncountedError;
 			Categories = generator.Categories;
 			EmbeddedAsins = generator.EmbeddedAsins;
 			RepresentAsins = generator.RepresentAsins;
 		}
-		public void Compile(string src, MagAttachedFileInformations attahedFileInfomations,
+		public void Compile(string src, object dummy,
 			bool modulafMode)
 		{
-			Compile(src, attahedFileInfomations, modulafMode, false);
+			Compile(src, dummy, modulafMode, false);
 		}
 	}
 }
