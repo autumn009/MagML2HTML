@@ -1,9 +1,11 @@
 ﻿using MagMLParser;
+using System.Diagnostics;
 using System.Xml;
 
 //const string filename = @"C:\Users\autumn.PDTOKYO4\OneDrive\SelfShare\0pub\C#\C#PRIMER2\org\20211107102022_▲_川俣晶の縁側_ソフトウェア_new%5FC#入門・全キーワード明快解説!.xmlcol";
 const string filename = @"C:\Users\autumn.PDTOKYO4\OneDrive\SelfShare\0pub\C#\C#PRIMER2\org\20211114105944_▲_川俣晶の縁側_ソフトウェア_new%5FC#入門・全キーワード明快解説!.xmlcol";
 
+const string tempout = @"c:\delme\delme.html";
 
 // DEBUG CODE
 XmlDocument doc = new XmlDocument();
@@ -19,4 +21,6 @@ if (srcNode.Count > 0)
     var processor = new MagML();
     processor.Compile(src, null, false);
     Console.WriteLine(processor.RenderedBody);
+    File.WriteAllText(tempout, processor.RenderedBody);
+    Process.Start("cmd.exe"," /c "+tempout);
 }
