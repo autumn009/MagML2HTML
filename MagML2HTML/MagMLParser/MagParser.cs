@@ -963,8 +963,11 @@ namespace MagMLParser
 			string fragmentID = "h" + hash.ToString("x");
 			using (NhHx hx = ((NhBlock)currentInfo.ParentNhNode).CreateHx(level))
 			{
+#if ENABLE_ANCHOR
 				hx.WriteIDAttr(fragmentID);
+#endif
 				hx.WriteText(targetNode.Children[0].Value);
+#if ENABLE_ANCHOR
 				hx.WriteText(" ");
 				using (NhA a = hx.CreateA())
 				{
@@ -972,6 +975,7 @@ namespace MagMLParser
 					a.WriteAttribute("href", "#" + fragmentID);
 					a.WriteText("§");
 				}
+#endif
 			}
 		}
 
