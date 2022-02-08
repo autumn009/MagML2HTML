@@ -22,56 +22,6 @@ namespace MagMLParser
 	{
 		public delegate void ConfirmNotNoDataItem();
 
-		public class ChileCollection : IEnumerable
-		{
-			private ArrayList collection = new ArrayList();
-
-			public IEnumerator GetEnumerator()
-			{
-				return collection.GetEnumerator();
-			}
-
-			public void Add(string asin)
-			{
-				confirmNotNoDataItem();
-				collection.Add(asin);
-			}
-			public void Clear()
-			{
-				confirmNotNoDataItem();
-				collection.Clear();
-			}
-			public string this[int index]
-			{
-				get { return (string)collection[index]; }
-				set
-				{
-					confirmNotNoDataItem();
-					collection[index] = value;
-				}
-			}
-			public int Count
-			{
-				get { return collection.Count; }
-			}
-			private ConfirmNotNoDataItem confirmNotNoDataItem;
-			public ChileCollection(ConfirmNotNoDataItem confirmNotNoDataItem)
-			{
-				this.confirmNotNoDataItem = confirmNotNoDataItem;
-			}
-			public static void alwaysNoDataItem()
-			{
-				throw new System.InvalidOperationException("存在しないアイテムに書き込もうとしました。");
-			}
-			public static ChileCollection Empty
-			{
-				get
-				{
-					return new ChileCollection(new ConfirmNotNoDataItem(alwaysNoDataItem));
-				}
-			}
-		}
-
 		private const string DateTimeFormat = "yyyyMMddHHmmss";
 
 		private FullKeyword lastKeyword = FullKeyword.NoKeyword;
@@ -85,10 +35,6 @@ namespace MagMLParser
 				throw new System.InvalidOperationException("存在しないアイテムに書き込もうとしました。");
 			}
 		}
-
-		public ChileCollection ChileDirectIDs;
-		public ChileCollection ChileEmbeddedIDs;
-		public ChileCollection ChileRepresentISs;
 
 		private ArrayList alreadySentTrackBackUrls = new ArrayList();
 
@@ -111,9 +57,6 @@ namespace MagMLParser
 
 		private Item(ItemID itemID, DateTime datetime)
 		{
-			ChileDirectIDs = new ChileCollection(new ConfirmNotNoDataItem(confirmNotNoDataItem));
-			ChileEmbeddedIDs = new ChileCollection(new ConfirmNotNoDataItem(confirmNotNoDataItem));
-			ChileRepresentISs = new ChileCollection(new ConfirmNotNoDataItem(confirmNotNoDataItem));
 			ItemID = itemID;
 			Date = datetime;
 		}
@@ -124,22 +67,6 @@ namespace MagMLParser
 				lock (duplicateFrom)
 				{
 					this.AdditionalTitle = duplicateFrom.AdditionalTitle;
-
-					this.ChileDirectIDs.Clear();
-					for (int i = 0; i < duplicateFrom.ChileDirectIDs.Count; i++)
-					{
-						this.ChileDirectIDs.Add(duplicateFrom.ChileDirectIDs[i]);
-					}
-					this.ChileEmbeddedIDs.Clear();
-					for (int i = 0; i < duplicateFrom.ChileEmbeddedIDs.Count; i++)
-					{
-						this.ChileEmbeddedIDs.Add(duplicateFrom.ChileEmbeddedIDs[i]);
-					}
-					this.ChileRepresentISs.Clear();
-					for (int i = 0; i < duplicateFrom.ChileRepresentISs.Count; i++)
-					{
-						this.ChileRepresentISs.Add(duplicateFrom.ChileRepresentISs[i]);
-					}
 
 					this.waitingTrackBackUrls = (ArrayList)duplicateFrom.waitingTrackBackUrls.Clone();
 					this.processingTrackBackUrls = (ArrayList)duplicateFrom.processingTrackBackUrls.Clone();
