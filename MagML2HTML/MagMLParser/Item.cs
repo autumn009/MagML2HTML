@@ -6,7 +6,6 @@ using System.IO;
 using System.Drawing;
 using System.Xml;
 using System.Diagnostics;
-using SimpleCharTestLib;
 
 namespace MagMLParser
 {

@@ -24,12 +24,4 @@ namespace MagMLParser
 			return false;
 		}
     }
-	public class UtilXmlWriter
-	{
-		public static void WriteNewline(XmlWriter writer)
-		{
-			writer.WriteWhitespace("\r\n");
-		}
-	}
-
 }

@@ -5,8 +5,7 @@
 	using System.IO;
 	using System.Linq;
 	using NestedHtmlWriter;
-	using SimpleCharTestLib;
-
+	
 namespace MagMLParser
 {
 	public enum EMagTokenType
